@@ -455,9 +455,6 @@ class App:
 
         threading.Thread(target=run, daemon=True).start()
 
-
-# ── Entry point ───────────────────────────────────────────────────────────────
-
 if __name__ == "__main__":
     root = tk.Tk()
     root.configure(bg=BG)
