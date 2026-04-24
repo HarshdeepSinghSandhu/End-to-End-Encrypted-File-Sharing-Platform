@@ -55,7 +55,9 @@ def add_log(username, action, detail):
         "ip":        ip
     })
 
-
+@app.route("/")
+def home():
+    return "SecureShare Server Running 🚀"
 
 
 @app.route("/register", methods=["POST"])
