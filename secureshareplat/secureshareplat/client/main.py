@@ -45,7 +45,7 @@ from crypto_engine import (
 # -----------------------------------------------------------------------------
 # BACKEND WIRING
 # -----------------------------------------------------------------------------
-SERVER = "http://localhost:5000"
+SERVER = "https://end-to-end-encrypted-file-sharing.onrender.com"
 KEY_DIR = os.path.join(os.path.expanduser("~"), ".secureshare", "keys")
 DL_DIR = os.path.join(os.path.expanduser("~"), "Downloads", "SecureShare")
 
