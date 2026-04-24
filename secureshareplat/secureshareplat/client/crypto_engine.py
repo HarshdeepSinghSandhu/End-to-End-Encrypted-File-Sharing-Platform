@@ -3,6 +3,8 @@ import json
 import hashlib
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
+
+
 P = int("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
         "29024E088A67CC74020BBEA63B139B22514A08798E3404DD"
         "EF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245"
@@ -12,24 +14,34 @@ P = int("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD1"
 
 G = 2
 
+
 def generate_dh_keypair():
     private_key = int.from_bytes(os.urandom(32), "big") % (P - 3) + 2
     public_key  = pow(G, private_key, P)
     return private_key, public_key
 
+
+
 def compute_shared_secret(their_public_key, my_private_key):
     return pow(their_public_key, my_private_key, P)
 
+
+
 def derive_aes_key(shared_secret):
-    return hashlib.sha256(str(shared_secret).encode()).digest()
+    return hashlib.sha256(str(shared_secret).encode()).digest()  # 32 bytes
+
+
 
 def encrypt_file(file_bytes, aes_key):
     cipher = Cipher(algorithms.AES(aes_key), modes.CTR(bytes(16)))
     return cipher.encryptor().update(file_bytes)
 
+
+
 def decrypt_file(encrypted_bytes, aes_key):
     cipher = Cipher(algorithms.AES(aes_key), modes.CTR(bytes(16)))
     return cipher.decryptor().update(encrypted_bytes)
+
 
 def save_private_key(private_key, public_key, username, password, key_dir):
     os.makedirs(key_dir, exist_ok=True)
@@ -39,11 +51,13 @@ def save_private_key(private_key, public_key, username, password, key_dir):
         "public_key":  str(public_key)
     }).encode()
 
+
     aes_key   = hashlib.sha256(password.encode()).digest()
     encrypted = Cipher(algorithms.AES(aes_key), modes.CTR(bytes(16))).encryptor().update(data)
 
     with open(os.path.join(key_dir, f"{username}.key"), "wb") as f:
         f.write(encrypted)
+
 
 def load_private_key(username, password, key_dir):
     key_file = os.path.join(key_dir, f"{username}.key")
