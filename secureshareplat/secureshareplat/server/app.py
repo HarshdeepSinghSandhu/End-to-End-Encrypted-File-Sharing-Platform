@@ -47,8 +47,7 @@ def check_auth():
 def add_log(username, action, detail):
 
     try:
-         forwarded = request.headers.get("X-Forwarded-For", "")
-        ip = forwarded.split(",")[0].strip() if forwarded else request.remote_addr
+         ip = request.remote_addr or "unknown"
     except RuntimeError:
         ip = "system"
     LOGS.append({
