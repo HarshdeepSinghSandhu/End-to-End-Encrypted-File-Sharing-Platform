@@ -6,7 +6,10 @@ import time
 from datetime import datetime
 from flask import Flask, request, jsonify, Response
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 
 USERS    = {}
@@ -44,7 +47,8 @@ def check_auth():
 def add_log(username, action, detail):
 
     try:
-        ip = request.remote_addr or "unknown"
+         forwarded = request.headers.get("X-Forwarded-For", "")
+        ip = forwarded.split(",")[0].strip() if forwarded else request.remote_addr
     except RuntimeError:
         ip = "system"
     LOGS.append({
